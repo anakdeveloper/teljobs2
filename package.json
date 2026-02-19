@@ -1,0 +1,16 @@
+{
+  "name": "glints-scraper-bot",
+  "version": "1.0.0",
+  "description": "Glints Job Scraper with AI Verification and Telegram Notification",
+  "main": "scraper.js",
+  "scripts": {
+    "start": "node scraper.js"
+  },
+  "dependencies": {
+    "puppeteer": "^24.2.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7"
+  }
+}
