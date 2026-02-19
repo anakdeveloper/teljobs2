@@ -24,6 +24,34 @@ const BLACKLIST_COMPANIES = ["PT ALFA SCORPII", "ALFA SCORPII"];
 // Helper to delay execution
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+const MAX_NOTIFICATIONS_PER_RUN = 5;
+
+// Helper to check freshness (max 3 days)
+function isFresh(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+
+    // "Baru saja", "menit yang lalu", "jam yang lalu" -> Always fresh
+    if (lower.includes("baru saja") || lower.includes("menit") || lower.includes("jam") || lower.includes("just now") || lower.includes("minutes") || lower.includes("hours")) {
+        return true;
+    }
+
+    // Check days
+    // Matches "1 hari", "2 days", "3 hari yang lalu", etc.
+    const dayMatch = lower.match(/(\d+)\s*(hari|day)/);
+    if (dayMatch) {
+        const days = parseInt(dayMatch[1]);
+        return days <= 3; // Limit to 3 days
+    }
+
+    // "minggu" or "bulan" -> Old
+    if (lower.includes("minggu") || lower.includes("week") || lower.includes("bulan") || lower.includes("month")) {
+        return false;
+    }
+
+    return false; // Strict default
+}
+
 async function sendTelegramMessage(message) {
     const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
     try {
@@ -178,10 +206,23 @@ async function verifyWithAI(job) {
 
                 console.log(`Found ${jobs.length} jobs on this page.`);
 
+                let notificationsSent = 0;
+
                 for (const job of jobs) {
+                    if (notificationsSent >= MAX_NOTIFICATIONS_PER_RUN) {
+                        console.log("Max notifications reached for this run.");
+                        break;
+                    }
+
                     const uniqueId = `${job.title}-${job.company}`;
                     if (processedJobs.has(uniqueId)) continue;
                     processedJobs.add(uniqueId);
+
+                    // 0. DATE Filter
+                    if (!isFresh(job.details)) {
+                        console.log(`Skipped (Old/No Date): ${job.title} - ${job.company}`);
+                        continue;
+                    }
 
                     // 1. Hard Filter
                     if (BLACKLIST_COMPANIES.some(b => job.company.toUpperCase().includes(b))) {
@@ -195,6 +236,7 @@ async function verifyWithAI(job) {
                     if (verification.valid) {
                         const msg = `✅ *Job Verified*\n\n📋 *Title*: ${job.title}\n🏢 *Company*: ${job.company}\n🤖 *AI Reason*: ${verification.reason}\n\n🔗 [Apply Here](${job.link})`;
                         await sendTelegramMessage(msg);
+                        notificationsSent++;
                     } else {
                         console.log(`Skipped (AI Reject): ${job.title} - ${verification.reason}`);
                     }
