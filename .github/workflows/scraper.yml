@@ -2,8 +2,9 @@ name: Glints Hourly Scraper
 
 on:
   schedule:
-    # Run every hour at minute 0 (e.g. 15:00, 16:00, ...)
-    - cron: '0 * * * *'
+    # Run every hour at minute 17 (uncommon = reliable)
+    # WIB: 15:17, 16:17, 17:17, ...
+    - cron: '17 * * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -46,3 +47,4 @@ jobs:
         git add processed_jobs.json
         git diff-index --quiet HEAD || git commit -m "Update job history [skip ci]"
         git push
+
