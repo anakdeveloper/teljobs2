@@ -2,11 +2,11 @@ name: Glints Hourly Scraper
 
 on:
   schedule:
-    # 90-minute interval logic:
-    # 00:00, 03:00, 06:00... (Every 3 hours)
-    - cron: '0 0/3 * * *'
-    # 01:30, 04:30, 07:30... (Offset by 1.5 hours)
-    - cron: '30 1/3 * * *'
+    # Run at 00:00, 01:30, 03:00, 04:30, etc.
+    # Every 3 hours starting at 00:00
+    - cron: '0 0,3,6,9,12,15,18,21 * * *'
+    # Every 3 hours starting at 01:30
+    - cron: '30 1,4,7,10,13,16,19,22 * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
