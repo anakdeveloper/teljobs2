@@ -43,7 +43,7 @@ function isFresh(text) {
     const dayMatch = lower.match(/(\d+)\s*(hari|day)/);
     if (dayMatch) {
         const days = parseInt(dayMatch[1]);
-        return days <= 3; // Limit to 3 days
+        return days <= 14; // Limit increased to 14 days
     }
 
     // "minggu" or "bulan" -> Old
@@ -211,7 +211,14 @@ const HISTORY_FILE = 'processed_jobs.json';
                             if (!container) return;
 
                             const companyEl = container.querySelector('a[href*="/companies/"]');
-                            const companyName = companyEl ? companyEl.innerText : (container.innerText.split('\n')[1] || "Unknown");
+                            let companyName = companyEl ? companyEl.innerText : "";
+
+                            // Fallback if link not found: Try to find common patterns or use specific index
+                            if (!companyName) {
+                                const lines = container.innerText.split('\n').filter(l => l.trim().length > 0);
+                                // In Glints cards, company is often after salary or 2nd/3rd line
+                                companyName = lines[2] || lines[1] || "Unknown Company";
+                            }
 
                             if (link && companyName) {
                                 extracted.push({
