@@ -313,7 +313,7 @@ const HISTORY_FILE = 'processed_jobs.json';
 
         if (totalNotificationsSent === 0) {
             console.log("No new jobs found in this run. Sending update.");
-            // await sendNotification("LOKER BELUM ADA FI");
+            await sendNotification("belom ada loker fii, semangat terus yaa jangan menyerah ");
         }
 
     } catch (error) {
