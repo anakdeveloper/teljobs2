@@ -24,7 +24,27 @@ const TARGET_URLS = [
     // Glints Deli Serdang Terbaru (sortBy=LATEST)
     "https://glints.com/id/opportunities/jobs/explore?country=ID&locationId=3a47657b-facc-45dc-9d7f-1c6fb25f49d4&locationName=Kab.+Deli+Serdang%2C+Sumatera+Utara&lowestLocationLevel=3&sortBy=LATEST",
     // LokerMedan
-    "https://lokermedan.co.id/"
+    "https://lokermedan.co.id/",
+    // Glints IT Sumatera Utara
+    "https://glints.com/id/opportunities/jobs/explore?keyword=IT&country=ID&locationId=ce7eb5cb-583a-40b2-b12b-0e17f59469e6&locationName=Sumatera+Utara&lowestLocationLevel=2&page=2",
+    // Glints Marketing Sumatera Utara
+    "https://glints.com/id/opportunities/jobs/explore?keyword=MARKETING&country=ID&locationId=ce7eb5cb-583a-40b2-b12b-0e17f59469e6&locationName=Sumatera+Utara&lowestLocationLevel=2&page=4",
+    // Glints IT Remote
+    "https://glints.com/id/opportunities/jobs/explore?keyword=IT&country=ID&locationName=All+Cities%2FProvinces&lowestLocationLevel=1&workArrangementOptions=%2CREMOTE&page=2",
+    // Glints Sumatera Utara Remote
+    "https://glints.com/id/opportunities/jobs/explore?country=ID&locationId=ce7eb5cb-583a-40b2-b12b-0e17f59469e6&locationName=Sumatera+Utara&lowestLocationLevel=2&workArrangementOptions=REMOTE",
+    // JobStreet ICT Medan
+    "https://id.jobstreet.com/id/jobs-in-information-communication-technology/in-Medan-Sumatera-Utara",
+    // JobStreet ICT Sumatera Utara
+    "https://id.jobstreet.com/id/jobs-in-information-communication-technology/in-Sumatera-Utara",
+    // JobStreet ICT Remote
+    "https://id.jobstreet.com/id/jobs-in-information-communication-technology/remote",
+    // Loker.id IT Sumatera Utara
+    "https://www.loker.id/cari-lowongan-kerja?q=it&lokasi=sumatera-utara",
+    // Loker.id Sumatera Utara (Semua)
+    "https://www.loker.id/lokasi-pekerjaan/sumatera-utara",
+    // Loker.id IT Sumatera Utara (Kategori)
+    "https://www.loker.id/lowongan-kerja/information-technology/sumatera-utara"
 ];
 
 const BLACKLIST_COMPANIES = ["PT ALFA SCORPII", "ALFA SCORPII"];
@@ -325,6 +345,71 @@ const HISTORY_FILE = 'processed_jobs.json';
                         });
                         return unique;
                     });
+                } else if (url.includes('loker.id')) {
+                    // --- LOKER.ID SCRAPING LOGIC ---
+                    console.log("Detected Loker.id URL");
+                    await delay(3000);
+
+                    jobs = await page.evaluate(() => {
+                        const extracted = [];
+                        // Loker.id job links end with .html and contain category paths
+                        const allLinks = Array.from(document.querySelectorAll('a[href$=".html"]'));
+
+                        const jobLinks = allLinks.filter(a => {
+                            const href = a.getAttribute('href') || '';
+                            // Job detail links have pattern: /category/subcategory/job-title-company-city.html
+                            const parts = href.replace(/^\//, '').split('/');
+                            return parts.length >= 3 && href.endsWith('.html') && !href.includes('tentang-kami') && !href.includes('kebijakan');
+                        });
+
+                        const uniqueHrefs = [...new Set(jobLinks.map(a => a.getAttribute('href')))];
+
+                        uniqueHrefs.forEach(href => {
+                            const linkEl = document.querySelector(`a[href="${href}"]`);
+                            if (!linkEl) return;
+
+                            const title = linkEl.innerText.trim() || linkEl.title || "Unknown";
+                            if (title.length <= 3 || title.toLowerCase() === 'rincian' || title.toLowerCase() === 'selengkapnya') return;
+
+                            // Make URL absolute
+                            const absoluteUrl = href.startsWith('http') ? href : `https://www.loker.id${href.startsWith('/') ? '' : '/'}${href}`;
+
+                            // Extract company from URL slug: job-title-company-city.html
+                            const slug = href.split('/').pop().replace('.html', '');
+                            const slugParts = slug.split('-');
+                            let company = "Loker.id";
+                            // City is usually last part, company before it
+                            if (slugParts.length >= 3) {
+                                // Last part is usually city name
+                                company = slugParts.slice(-2, -1).join(' ').replace(/^\w/, c => c.toUpperCase()) || "Loker.id";
+                            }
+
+                            // Try to get details from parent container
+                            let details = "";
+                            const container = linkEl.closest('.card, .job-item, article, div[class*="item"], div[class*="col"], div[class*="list"], tr, li');
+                            if (container) {
+                                details = container.innerText.trim();
+                            }
+
+                            extracted.push({
+                                title: title,
+                                company: company,
+                                link: absoluteUrl,
+                                details: details || title
+                            });
+                        });
+
+                        // Filter duplicates
+                        const unique = [];
+                        const seen = new Set();
+                        extracted.forEach(item => {
+                            if (!seen.has(item.link)) {
+                                seen.add(item.link);
+                                unique.push(item);
+                            }
+                        });
+                        return unique;
+                    });
                 }
 
                 if (jobs.length === 0) {
@@ -348,7 +433,7 @@ const HISTORY_FILE = 'processed_jobs.json';
                     processedJobs.add(uniqueId);
 
                     // 0. DATE Filter
-                    if (!isFresh(job.details) && !job.link.includes('lokermedan.co.id')) {
+                    if (!isFresh(job.details) && !job.link.includes('lokermedan.co.id') && !job.link.includes('loker.id')) {
                         console.log(`Skipped (Old/No Date): ${job.title} - ${job.company}`);
                         continue;
                     }
