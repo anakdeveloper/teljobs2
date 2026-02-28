@@ -1,10 +1,9 @@
 name: Glints Hourly Scraper
 
 on:
-  # schedule dimatikan karena sudah jalan double
-  # schedule:
-  #   - cron: '17 * * * *'
-  workflow_dispatch: # Allow manual trigger only
+  schedule:
+    - cron: '17 */2 * * *'  # Setiap 2 jam (menit ke-17)
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   scrape:
