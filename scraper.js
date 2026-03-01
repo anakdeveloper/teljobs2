@@ -477,7 +477,7 @@ const HISTORY_FILE = 'processed_jobs.json';
 
         if (totalNotificationsSent === 0) {
             console.log("No new jobs found in this run. Sending update.");
-            await sendNotification("belom ada loker fii, semangat terus yaa jangan menyerah ");
+            await sendNotification("BELUM ADA LOKER FI, KALAU SUDAH DI PANGGIL PERGI SAJA INTERVIEW FI, KALAU GAK UDAH PASTI KAU GAGAL  ");
         }
 
     } catch (error) {
