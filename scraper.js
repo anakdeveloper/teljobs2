@@ -53,6 +53,7 @@ const BLACKLIST_COMPANIES = ["PT ALFA SCORPII", "ALFA SCORPII"];
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const MAX_NOTIFICATIONS_PER_RUN = 10;
+const REPOST_COOLDOWN_DAYS = 3; // Minimum days before notifying a repost again
 
 // Helper to check freshness (max 3 days)
 function isFresh(text) {
@@ -129,14 +130,31 @@ const HISTORY_FILE = 'processed_jobs.json';
         args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
-    let processedJobs = new Set();
+    let processedJobs = new Map(); // Map<id, {id, title, company, firstSeen, lastSeen, seenCount, lastNotified}>
 
-    // Load history
+    // Load history (backward compatible with old string array format)
     if (fs.existsSync(HISTORY_FILE)) {
         try {
             const data = fs.readFileSync(HISTORY_FILE, 'utf8');
             const json = JSON.parse(data);
-            processedJobs = new Set(json.map(x => typeof x === 'string' ? x.toLowerCase().trim() : x));
+            for (const item of json) {
+                if (typeof item === 'string') {
+                    // Old format: just a string ID
+                    const id = item.toLowerCase().trim();
+                    processedJobs.set(id, {
+                        id,
+                        title: '',
+                        company: '',
+                        firstSeen: new Date().toISOString(),
+                        lastSeen: new Date().toISOString(),
+                        seenCount: 1,
+                        lastNotified: new Date().toISOString()
+                    });
+                } else if (item && item.id) {
+                    // New format: object with metadata
+                    processedJobs.set(item.id, item);
+                }
+            }
             console.log(`Loaded ${processedJobs.size} processed jobs from history.`);
         } catch (e) {
             console.error("Error reading history file:", e.message);
@@ -429,27 +447,64 @@ const HISTORY_FILE = 'processed_jobs.json';
                     }
 
                     const uniqueId = `${job.title.trim().toLowerCase()}-${job.company.trim().toLowerCase()}`;
-                    if (processedJobs.has(uniqueId)) continue;
-                    processedJobs.add(uniqueId);
+                    const now = new Date();
+                    const existingJob = processedJobs.get(uniqueId);
 
-                    // 0. DATE Filter
-                    if (!isFresh(job.details) && !job.link.includes('lokermedan.co.id') && !job.link.includes('loker.id')) {
-                        console.log(`Skipped (Old/No Date): ${job.title} - ${job.company}`);
-                        continue;
+                    if (existingJob) {
+                        // Job sudah pernah diproses — cek apakah ini repost
+                        const lastNotified = new Date(existingJob.lastNotified);
+                        const daysSinceLastNotif = (now - lastNotified) / (1000 * 60 * 60 * 24);
+
+                        if (daysSinceLastNotif < REPOST_COOLDOWN_DAYS) {
+                            // Masih dalam cooldown, update lastSeen saja
+                            existingJob.lastSeen = now.toISOString();
+                            continue;
+                        }
+
+                        // Repost detected! Update metadata
+                        existingJob.seenCount += 1;
+                        existingJob.lastSeen = now.toISOString();
+                        existingJob.lastNotified = now.toISOString();
+
+                        console.log(`🔁 REPOST detected (${existingJob.seenCount}x): ${job.title} at ${job.company}`);
+                        batchedMessage += `🔁 <b>REPOST (${existingJob.seenCount}x)</b>\n📌 <b>${job.title}</b>\n🏢 ${job.company}\n💡 <i>HRD masih cari kandidat untuk posisi ini!</i>\n🔗 <a href="${job.link}">Buka Lowongan</a>\n\n`;
+                        jobsInBatch++;
+                        notificationsSent++;
+                        totalNotificationsSent++;
+
+                    } else {
+                        // Job baru — proses seperti biasa
+
+                        // 0. DATE Filter
+                        if (!isFresh(job.details) && !job.link.includes('lokermedan.co.id') && !job.link.includes('loker.id')) {
+                            console.log(`Skipped (Old/No Date): ${job.title} - ${job.company}`);
+                            continue;
+                        }
+
+                        // 1. Hard Filter
+                        if (BLACKLIST_COMPANIES.some(b => job.company.toUpperCase().includes(b))) {
+                            console.log(`Skipped (Blacklisted): ${job.company}`);
+                            continue;
+                        }
+
+                        // Simpan ke history sebagai job baru
+                        processedJobs.set(uniqueId, {
+                            id: uniqueId,
+                            title: job.title.trim(),
+                            company: job.company.trim(),
+                            firstSeen: now.toISOString(),
+                            lastSeen: now.toISOString(),
+                            seenCount: 1,
+                            lastNotified: now.toISOString()
+                        });
+
+                        // Accumulate Notification
+                        console.log(`Adding to batch for: ${job.title} at ${job.company}`);
+                        batchedMessage += `✅ <b>${job.title}</b>\n🏢 ${job.company}\n🔗 <a href="${job.link}">Buka Lowongan</a>\n\n`;
+                        jobsInBatch++;
+                        notificationsSent++;
+                        totalNotificationsSent++;
                     }
-
-                    // 1. Hard Filter
-                    if (BLACKLIST_COMPANIES.some(b => job.company.toUpperCase().includes(b))) {
-                        console.log(`Skipped (Blacklisted): ${job.company}`);
-                        continue;
-                    }
-
-                    // Accumulate Notification
-                    console.log(`Adding to batch for: ${job.title} at ${job.company}`);
-                    batchedMessage += `✅ <b>${job.title}</b>\n🏢 ${job.company}\n🔗 <a href="${job.link}">Buka Lowongan</a>\n\n`;
-                    jobsInBatch++;
-                    notificationsSent++;
-                    totalNotificationsSent++;
 
                     // Send batch if it reaches 5 jobs to avoid message being too long
                     if (jobsInBatch >= 5) {
@@ -488,7 +543,7 @@ const HISTORY_FILE = 'processed_jobs.json';
 
         // Save history (Limit to last 1000 to prevent infinite growth)
         try {
-            const historyArray = Array.from(processedJobs).slice(-1000);
+            const historyArray = Array.from(processedJobs.values()).slice(-1000);
             fs.writeFileSync(HISTORY_FILE, JSON.stringify(historyArray, null, 2));
             console.log("Updated job history saved.");
         } catch (e) {
