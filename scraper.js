@@ -55,7 +55,6 @@ const BLACKLIST_COMPANIES = ["PT ALFA SCORPII", "ALFA SCORPII"];
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const MAX_NOTIFICATIONS_PER_RUN = 10;
-const REPOST_COOLDOWN_DAYS = 3; // Minimum days before notifying a repost again
 
 // Helper to check freshness (max 3 days)
 function isFresh(text) {
@@ -458,27 +457,11 @@ const HISTORY_FILE = 'processed_jobs.json';
                     const existingJob = processedJobs.get(uniqueId);
 
                     if (existingJob) {
-                        // Job sudah pernah diproses — cek apakah ini repost
-                        const lastNotified = new Date(existingJob.lastNotified);
-                        const daysSinceLastNotif = (now - lastNotified) / (1000 * 60 * 60 * 24);
-
-                        if (daysSinceLastNotif < REPOST_COOLDOWN_DAYS) {
-                            // Masih dalam cooldown, update lastSeen saja
-                            existingJob.lastSeen = now.toISOString();
-                            continue;
-                        }
-
-                        // Repost detected! Update metadata
-                        existingJob.seenCount += 1;
+                        // Job sudah pernah diproses — update lastSeen saja (tidak kirim notifikasi lagi)
                         existingJob.lastSeen = now.toISOString();
-                        existingJob.lastNotified = now.toISOString();
-
-                        console.log(`🔁 REPOST detected (${existingJob.seenCount}x): ${job.title} at ${job.company}`);
-                        batchedMessage += `🔁 <b>REPOST (${existingJob.seenCount}x)</b>\n📌 <b>${job.title}</b>\n🏢 ${job.company}\n💡 <i>HRD masih cari kandidat untuk posisi ini!</i>\n🔗 <a href="${job.link}">Buka Lowongan</a>\n\n`;
-                        jobsInBatch++;
-                        notificationsSent++;
-                        totalNotificationsSent++;
-
+                        existingJob.seenCount += 1;
+                        console.log(`Skipped (Duplicate/Repost): ${job.title} at ${job.company}`);
+                        continue;
                     } else {
                         // Job baru — proses seperti biasa
 
