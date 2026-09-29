@@ -1,59 +1,5 @@
 [
   {
-    "id": "team leader penjualan sepeda motor honda - cab simpang brayan-nusantara sakti group",
-    "title": "Team Leader Penjualan Sepeda Motor Honda - Cab Simpang Brayan",
-    "company": "Nusantara Sakti Group",
-    "firstSeen": "2026-08-10T08:57:41.095Z",
-    "lastSeen": "2026-08-10T13:52:27.448Z",
-    "seenCount": 2,
-    "lastNotified": "2026-08-10T08:57:41.095Z"
-  },
-  {
-    "id": "supervisor agen penjualan sepeda motor - cab simpang brayan-nusantara sakti group",
-    "title": "Supervisor Agen Penjualan Sepeda Motor - Cab Simpang Brayan",
-    "company": "Nusantara Sakti Group",
-    "firstSeen": "2026-08-10T08:57:41.095Z",
-    "lastSeen": "2026-08-10T13:52:27.448Z",
-    "seenCount": 2,
-    "lastNotified": "2026-08-10T08:57:41.095Z"
-  },
-  {
-    "id": "cafe server-uniplaza",
-    "title": "Cafe Server",
-    "company": "UNIPLAZA",
-    "firstSeen": "2026-08-10T08:57:41.095Z",
-    "lastSeen": "2026-08-10T13:52:27.448Z",
-    "seenCount": 2,
-    "lastNotified": "2026-08-10T08:57:41.095Z"
-  },
-  {
-    "id": "accounting supervisor-pt. pangeran tata udara nusantara",
-    "title": "accounting Supervisor",
-    "company": "PT. Pangeran Tata Udara Nusantara",
-    "firstSeen": "2026-08-10T08:57:41.095Z",
-    "lastSeen": "2026-08-10T13:52:27.448Z",
-    "seenCount": 2,
-    "lastNotified": "2026-08-10T08:57:41.095Z"
-  },
-  {
-    "id": "social media & content specialist-spring people - juvina t***",
-    "title": "Social Media & Content Specialist",
-    "company": "Spring People - Juvina T***",
-    "firstSeen": "2026-08-10T10:40:25.205Z",
-    "lastSeen": "2026-08-10T10:40:25.205Z",
-    "seenCount": 2,
-    "lastNotified": "2026-08-10T10:40:25.205Z"
-  },
-  {
-    "id": "staff admin-pt.cahaya mulia angkasa",
-    "title": "staff admin",
-    "company": "PT.Cahaya Mulia Angkasa",
-    "firstSeen": "2026-08-10T10:41:00.054Z",
-    "lastSeen": "2026-08-14T13:51:15.248Z",
-    "seenCount": 62,
-    "lastNotified": "2026-08-10T10:41:00.054Z"
-  },
-  {
     "id": "helper operasional-toto durian",
     "title": "HELPER OPERASIONAL",
     "company": "TOTO DURIAN",
@@ -1381,8 +1327,8 @@
     "title": "Facebook",
     "company": "LokerMedan",
     "firstSeen": "2026-08-13T12:07:33.369Z",
-    "lastSeen": "2026-09-20T16:25:11.232Z",
-    "seenCount": 51,
+    "lastSeen": "2026-09-29T14:12:15.552Z",
+    "seenCount": 52,
     "lastNotified": "2026-08-13T12:07:33.369Z"
   },
   {
@@ -8185,8 +8131,8 @@
     "title": "Twitter",
     "company": "LokerMedan",
     "firstSeen": "2026-09-20T16:25:11.232Z",
-    "lastSeen": "2026-09-20T16:25:11.232Z",
-    "seenCount": 1,
+    "lastSeen": "2026-09-29T14:12:15.552Z",
+    "seenCount": 2,
     "lastNotified": "2026-09-20T16:25:11.232Z"
   },
   {
@@ -8998,5 +8944,59 @@
     "lastSeen": "2026-09-28T15:42:37.253Z",
     "seenCount": 1,
     "lastNotified": "2026-09-28T15:42:37.253Z"
+  },
+  {
+    "id": "relationship officer program-pt bank central asia tbk (bca)",
+    "title": "RELATIONSHIP OFFICER PROGRAM",
+    "company": "PT Bank Central Asia Tbk (BCA)",
+    "firstSeen": "2026-09-29T14:09:58.140Z",
+    "lastSeen": "2026-09-29T14:13:04.164Z",
+    "seenCount": 26,
+    "lastNotified": "2026-09-29T14:09:58.140Z"
+  },
+  {
+    "id": "management development program (mdp)-pt bank central asia tbk (bca)",
+    "title": "MANAGEMENT DEVELOPMENT PROGRAM (MDP)",
+    "company": "PT Bank Central Asia Tbk (BCA)",
+    "firstSeen": "2026-09-29T14:09:58.141Z",
+    "lastSeen": "2026-09-29T14:13:04.164Z",
+    "seenCount": 26,
+    "lastNotified": "2026-09-29T14:09:58.141Z"
+  },
+  {
+    "id": "recruitment staff-pt puriasri bhaktikarya",
+    "title": "RECRUITMENT STAFF",
+    "company": "PT Puriasri Bhaktikarya",
+    "firstSeen": "2026-09-29T14:09:58.141Z",
+    "lastSeen": "2026-09-29T14:13:04.164Z",
+    "seenCount": 26,
+    "lastNotified": "2026-09-29T14:09:58.141Z"
+  },
+  {
+    "id": "field collection bank mandiri penempatan subang-pt puriasri bhaktikarya",
+    "title": "FIELD COLLECTION BANK MANDIRI PENEMPATAN SUBANG",
+    "company": "PT Puriasri Bhaktikarya",
+    "firstSeen": "2026-09-29T14:09:58.141Z",
+    "lastSeen": "2026-09-29T14:13:04.164Z",
+    "seenCount": 26,
+    "lastNotified": "2026-09-29T14:09:58.141Z"
+  },
+  {
+    "id": "magang bakti customer service - pembukaan rekening online-pt bank central asia tbk (bca)",
+    "title": "MAGANG BAKTI CUSTOMER SERVICE - PEMBUKAAN REKENING ONLINE",
+    "company": "PT Bank Central Asia Tbk (BCA)",
+    "firstSeen": "2026-09-29T14:09:58.141Z",
+    "lastSeen": "2026-09-29T14:13:04.164Z",
+    "seenCount": 13,
+    "lastNotified": "2026-09-29T14:09:58.141Z"
+  },
+  {
+    "id": "magang bakti (frontliner)-pt bank central asia tbk (bca)",
+    "title": "MAGANG BAKTI (Frontliner)",
+    "company": "PT Bank Central Asia Tbk (BCA)",
+    "firstSeen": "2026-09-29T14:10:00.933Z",
+    "lastSeen": "2026-09-29T14:13:04.164Z",
+    "seenCount": 13,
+    "lastNotified": "2026-09-29T14:10:00.933Z"
   }
 ]
