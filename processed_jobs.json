@@ -1,23 +1,5 @@
 [
   {
-    "id": "helper operasional-toto durian",
-    "title": "HELPER OPERASIONAL",
-    "company": "TOTO DURIAN",
-    "firstSeen": "2026-08-10T10:41:44.552Z",
-    "lastSeen": "2026-08-17T13:13:24.740Z",
-    "seenCount": 49,
-    "lastNotified": "2026-08-10T10:41:44.552Z"
-  },
-  {
-    "id": "admin penjualan-toto durian",
-    "title": "ADMIN PENJUALAN",
-    "company": "TOTO DURIAN",
-    "firstSeen": "2026-08-10T10:41:44.553Z",
-    "lastSeen": "2026-08-16T13:07:20.053Z",
-    "seenCount": 43,
-    "lastNotified": "2026-08-10T10:41:44.553Z"
-  },
-  {
     "id": "admin kasir-toto durian",
     "title": "ADMIN KASIR",
     "company": "TOTO DURIAN",
@@ -1327,8 +1309,8 @@
     "title": "Facebook",
     "company": "LokerMedan",
     "firstSeen": "2026-08-13T12:07:33.369Z",
-    "lastSeen": "2026-10-01T14:38:21.054Z",
-    "seenCount": 54,
+    "lastSeen": "2026-10-02T14:00:17.208Z",
+    "seenCount": 55,
     "lastNotified": "2026-08-13T12:07:33.369Z"
   },
   {
@@ -8131,8 +8113,8 @@
     "title": "Twitter",
     "company": "LokerMedan",
     "firstSeen": "2026-09-20T16:25:11.232Z",
-    "lastSeen": "2026-10-01T14:38:21.054Z",
-    "seenCount": 4,
+    "lastSeen": "2026-10-02T14:00:17.208Z",
+    "seenCount": 5,
     "lastNotified": "2026-09-20T16:25:11.232Z"
   },
   {
@@ -8950,8 +8932,8 @@
     "title": "RELATIONSHIP OFFICER PROGRAM",
     "company": "PT Bank Central Asia Tbk (BCA)",
     "firstSeen": "2026-09-29T14:09:58.140Z",
-    "lastSeen": "2026-10-01T14:39:06.033Z",
-    "seenCount": 78,
+    "lastSeen": "2026-10-02T14:01:04.673Z",
+    "seenCount": 104,
     "lastNotified": "2026-09-29T14:09:58.140Z"
   },
   {
@@ -8959,8 +8941,8 @@
     "title": "MANAGEMENT DEVELOPMENT PROGRAM (MDP)",
     "company": "PT Bank Central Asia Tbk (BCA)",
     "firstSeen": "2026-09-29T14:09:58.141Z",
-    "lastSeen": "2026-10-01T14:39:06.033Z",
-    "seenCount": 78,
+    "lastSeen": "2026-10-02T14:01:04.673Z",
+    "seenCount": 104,
     "lastNotified": "2026-09-29T14:09:58.141Z"
   },
   {
@@ -8998,5 +8980,23 @@
     "lastSeen": "2026-09-29T14:13:04.164Z",
     "seenCount": 13,
     "lastNotified": "2026-09-29T14:10:00.933Z"
+  },
+  {
+    "id": "sales generalis bank mandiri penempatan kwala begumit-pt puriasri bhaktikarya",
+    "title": "SALES GENERALIS BANK MANDIRI PENEMPATAN KWALA BEGUMIT",
+    "company": "PT Puriasri Bhaktikarya",
+    "firstSeen": "2026-10-02T13:58:02.882Z",
+    "lastSeen": "2026-10-02T14:01:04.673Z",
+    "seenCount": 26,
+    "lastNotified": "2026-10-02T13:58:02.882Z"
+  },
+  {
+    "id": "driver (domisili bali)-ud. duta pangan",
+    "title": "Driver (Domisili Bali)",
+    "company": "UD. Duta Pangan",
+    "firstSeen": "2026-10-02T13:58:02.883Z",
+    "lastSeen": "2026-10-02T14:01:04.673Z",
+    "seenCount": 26,
+    "lastNotified": "2026-10-02T13:58:02.883Z"
   }
 ]
